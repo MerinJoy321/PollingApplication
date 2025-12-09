@@ -1,0 +1,14 @@
+package com.example.service;
+
+import com.example.dto.request.CreateElectionRequest;
+import com.example.dto.response.ElectionResultResponse;
+import com.example.dto.response.MessageResponse;
+
+public interface ElectionServiceImpl {
+
+    MessageResponse createElection(CreateElectionRequest request);
+
+    ElectionResultResponse getElectionDetails(Long electionId);
+
+    MessageResponse declareResults(Long electionId);
+}

@@ -1,0 +1,9 @@
+package com.example.api;
+
+public class ElectionController {
+
+	public ElectionController() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

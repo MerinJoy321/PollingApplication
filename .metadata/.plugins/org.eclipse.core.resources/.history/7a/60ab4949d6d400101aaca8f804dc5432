@@ -1,0 +1,18 @@
+package com.example.repository;
+
+import com.example.entity.Candidate;
+import com.example.entity.Election;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface CandidateRepository extends JpaRepository<Candidate, Long> {
+
+    List<Candidate> findByElection(Election election);
+
+    List<Candidate> findByApprovedTrue();
+
+    boolean existsByVoterVoterId(String voterId);
+}

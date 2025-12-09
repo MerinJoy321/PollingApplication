@@ -1,0 +1,60 @@
+package com.example.controller;
+
+import com.example.dto.response.MessageResponse;
+import com.example.service.UserService;
+import com.example.service.CandidateService;
+import com.example.service.ElectionService;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/admin")
+@Validated
+public class AdminController {
+
+    @Autowired
+    private UserService userService; // voter operations
+
+    @Autowired
+    private CandidateService candidateService; // candidate operations
+
+    @Autowired
+    private ElectionService electionService; // election operations
+
+    @Operation(summary = "Approve a voter by ID")
+    @PostMapping("/approve/voter/{voterId}")
+    public ResponseEntity<MessageResponse> approveVoter(@PathVariable String voterId) {
+        MessageResponse response = userService.approveVoter(voterId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Approve a candidate by ID")
+    @PostMapping("/approve/candidate/{candidateId}")
+    public ResponseEntity<MessageResponse> approveCandidate(@PathVariable Long candidateId) {
+        MessageResponse response = candidateService.approveCandidate(candidateId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Create a new election")
+    @PostMapping("/create-election")
+    public ResponseEntity<MessageResponse> createElection(@RequestBody @Validated com.example.dto.request.CreateElectionRequest request) {
+        MessageResponse response = electionService.createElection(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Declare results and delete votes")
+    @PostMapping("/declare-results/{electionId}")
+    public ResponseEntity<MessageResponse> declareResults(@PathVariable Long electionId) {
+        MessageResponse response = electionService.declareResults(electionId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Get polling percentage for an election")
+    @GetMapping("/polling-percentage/{electionId}")
+    public ResponseEntity<Double> getPollingPercentage(@PathVariable Long electionId) {
+        return ResponseEntity.ok(electionService.getPollingPercentage(electionId));
+    }
+}

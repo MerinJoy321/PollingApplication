@@ -1,0 +1,9 @@
+package com.example.dto.request;
+
+public class VoteRequest {
+
+	public VoteRequest() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

@@ -1,0 +1,9 @@
+package com.example.dto.response;
+
+public class CandidateResponse {
+
+	public CandidateResponse() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

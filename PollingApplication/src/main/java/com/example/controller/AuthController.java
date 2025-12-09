@@ -1,0 +1,52 @@
+package com.example.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.dto.request.LoginRequest;
+import com.example.dto.request.VoterRegisterRequest;
+import com.example.dto.request.AdminLoginRequest;
+import com.example.dto.response.MessageResponse;
+import com.example.dto.response.VoterResponse;
+import com.example.service.AdminService;
+import com.example.service.UserService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api/auth")
+@Validated
+public class AuthController {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private AdminService adminService;
+
+    @Operation(summary = "Register a new voter")
+    @PostMapping("/register")
+    public ResponseEntity<VoterResponse> registerVoter(@Valid @RequestBody VoterRegisterRequest request) {
+        VoterResponse response = userService.registerVoter(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Voter login using voterId")
+    @PostMapping("/login")
+    public ResponseEntity<MessageResponse> login(@Valid @RequestBody LoginRequest request) {
+        MessageResponse response = userService.login(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Admin login")
+    @PostMapping("/admin/login")
+    public ResponseEntity<MessageResponse> adminLogin(@Valid @RequestBody AdminLoginRequest request) {
+        return ResponseEntity.ok(adminService.login(request));
+    }
+}

@@ -1,0 +1,102 @@
+Absolutely — here is the **cleanest, fastest, essential-only feature set** for your Spring Boot polling app *that can be completed in half a day*, AND a list of features that you can **skip for now** without harming core functionality.
+
+---
+
+# ✅ **ESSENTIAL FEATURES (Keep These)**
+
+These are the **minimum required features** for your polling system to work correctly and securely.
+
+## **1. User (Voter) Registration & Login**
+
+* Voter signs up
+* Admin approves voter
+* System assigns a voterId after approval
+  → Needed so only verified voters can cast votes.
+
+---
+
+## **2. Candidate Registration + Approval**
+
+* Voter can request to become a candidate
+* Admin approves candidates
+  → Needed for generating the ballot options.
+
+---
+
+## **3. Create an Election (Admin)**
+
+* Admin creates an election title
+  → Needed because elections contain candidates & votes.
+
+*(Time window is optional — see below)*
+
+---
+
+## **4. Voting Process**
+
+* Voter enters voterId to vote
+* Ballot shows approved candidates
+* Voter selects a candidate
+* Vote is **hashed** and stored **without voterId**
+* Voter marked as **hasVoted = true**
+  → Required for fair & anonymous voting.
+
+---
+
+## **5. Counting Votes**
+
+* System counts hashed votes by candidateId
+  → Required to produce results.
+
+---
+
+## **6. Declare Results**
+
+* Admin sees candidate vote counts
+* Winner is displayed
+  → Required to conclude the election.
+
+---
+
+## **7. Wipe Votes After Results**
+
+* Delete all vote rows for the election
+* Keep only:
+
+  * Winner
+  * Candidate list
+  * Final vote counts
+    → Required to maintain anonymity & database cleanliness.
+
+---
+
+# 🎯 **This minimal feature set is enough to demo a working polling system with full correctness and security.**
+
+---
+
+
+# 🚀 **Summary: What to Keep vs Skip**
+
+## ✅ **Keep (Essential)**
+
+* Voter signup
+* Admin approval + voterId generation
+* Candidate registration + approval
+* Admin creates election
+* Voting (with hashed ballot + no voterId stored)
+* Mark voter as voted
+* Count votes
+* Declare winner
+* Wipe votes after results
+
+
+# 🎯 **Why this is the best minimal set?**
+
+✔ You keep all required core logic
+✔ Project remains clean and fast
+✔ You can finish backend in a few hours
+✔ You get a fully functional secure polling system
+✔ You reduce complexity but keep credibility
+
+---
+

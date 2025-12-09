@@ -1,0 +1,96 @@
+package com.example.controller;
+
+import com.example.dto.request.CreateElectionRequest;
+import com.example.dto.request.CandidateRegisterRequest;
+import com.example.entity.Election;
+import com.example.entity.Candidate;
+import com.example.service.ElectionService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequiredArgsConstructor
+public class PageController {
+
+    private final ElectionService electionService;
+    private final CandidateService candidateService;
+    private final VoterService voterService;
+
+    // =======================
+    // HOME PAGE
+    // =======================
+    @GetMapping("/")
+    public String home() {
+        return "index";
+    }
+
+    // =======================
+    // ADMIN DASHBOARD
+    // =======================
+    @GetMapping("/admin/dashboard")
+    public String adminDashboard() {
+        return "admin-dashboard";
+    }
+
+    // =======================
+    // REGISTER VOTER
+    // =======================
+    @GetMapping("/admin/register-voter")
+    public String registerVoterPage() {
+        return "register-voter";
+    }
+
+    // =======================
+    // REGISTER CANDIDATE (Page)
+    // =======================
+    @GetMapping("/admin/register-candidate")
+    public String registerCandidatePage(Model model) {
+        model.addAttribute("elections", electionService.getAllElections());
+        return "register-candidate";
+    }
+
+
+    // =======================
+    // CREATE ELECTION FORM
+    // =======================
+    @GetMapping("/admin/create-election")
+    public String createElectionPage() {
+        return "create-election";
+    }
+
+    // =======================
+    // VOTER: VIEW ELECTIONS
+    // =======================
+    @GetMapping("/voter/elections")
+    public String viewElections(Model model) {
+        model.addAttribute("elections", electionService.getAllElections());
+        return "elections";
+    }
+
+
+    // =======================
+    // VOTER: VOTE PAGE (Load Candidates)
+    // =======================
+    @GetMapping("/voter/vote")
+    public String votePage(Model model) {
+        // Get the single active election
+        Election election = electionService.getActiveElection(); // we'll add this method
+        model.addAttribute("election", election);
+
+        // Load candidates for this election
+        model.addAttribute("candidates", candidateService.getCandidatesByElection(election.getId()));
+
+        return "vote";
+    }
+
+
+    // =======================
+    // VOTE SUCCESS
+    // =======================
+    @GetMapping("/vote/success")
+    public String voteSuccess() {
+        return "vote-success";
+    }
+}

@@ -1,0 +1,41 @@
+package com.example.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "announcements")
+public class Announcement {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank
+    private String title;
+
+    @NotBlank
+    @Column(length = 1024)
+    private String message;
+
+    private LocalDateTime timestamp = LocalDateTime.now();
+
+    // Constructors
+    public Announcement() {}
+
+    public Announcement(String title, String message) {
+        this.title = title;
+        this.message = message;
+    }
+
+    // Getters & Setters
+    public Long getId() { return id; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
+}

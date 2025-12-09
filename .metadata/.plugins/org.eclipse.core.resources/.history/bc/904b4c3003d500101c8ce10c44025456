@@ -1,0 +1,83 @@
+package com.example.controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.dto.request.CandidateRegisterRequest;
+import com.example.dto.response.MessageResponse;
+import com.example.dto.response.VoterResponse;
+import com.example.dto.response.BallotResponse;
+import com.example.service.CandidateService;
+import com.example.service.UserService;
+import com.example.service.ElectionService;
+import com.example.entity.Election;
+import com.example.entity.Candidate;
+
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api/voter")
+@Validated
+public class VoterController {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private CandidateService candidateService;
+
+    @Autowired
+    private ElectionService electionService;
+
+    @Operation(summary = "Get voter profile by voterId")
+    @GetMapping("/{voterId}")
+    public ResponseEntity<VoterResponse> getVoterProfile(@PathVariable String voterId) {
+        VoterResponse response = userService.getVoterByVoterId(voterId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Register as candidate for an election")
+    @PostMapping("/register-candidate")
+    public ResponseEntity<MessageResponse> registerAsCandidate(@Valid @RequestBody CandidateRegisterRequest request) {
+        MessageResponse response = candidateService.registerCandidate(request);
+        return ResponseEntity.ok(response);
+    }
+    public VoterController(UserService userService, CandidateService candidateService) {
+        this.userService = userService;
+        this.candidateService = candidateService;
+    }
+
+    @Operation(summary = "Get active ballot (election + approved candidates) for a voter")
+    @GetMapping("/ballot/active/{voterId}")
+    public ResponseEntity<BallotResponse> getActiveBallot(@PathVariable String voterId) {
+        VoterResponse voter = userService.getVoterByVoterId(voterId);
+        if (!voter.isApproved()) {
+            throw new IllegalArgumentException("Voter not approved");
+        }
+        Election election = electionService.getActiveElection();
+        List<Candidate> candidates = candidateService.getCandidatesByElection(election.getId());
+
+        BallotResponse ballot = new BallotResponse();
+        ballot.setElectionId(election.getId());
+        ballot.setElectionTitle(election.getTitle());
+        ballot.setStartTime(election.getStartTime());
+        ballot.setEndTime(election.getEndTime());
+        ballot.setCandidates(candidates.stream().map(c -> {
+            com.example.dto.response.CandidateResponse cr = new com.example.dto.response.CandidateResponse();
+            cr.setId(c.getId());
+            cr.setName(c.getName());
+            cr.setManifesto(c.getManifesto());
+            cr.setApproved(c.isApproved());
+            return cr;
+        }).toList());
+
+        return ResponseEntity.ok(ballot);
+    }
+}

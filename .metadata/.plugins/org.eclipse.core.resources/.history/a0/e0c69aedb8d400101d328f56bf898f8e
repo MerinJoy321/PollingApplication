@@ -1,0 +1,27 @@
+package com.example.repository;
+
+public class Snippet {
+	Polling functions
+	⦁	Voter registers in portal
+	⦁	Admin approves voter
+	⦁	Adds to voter list
+	⦁	Voter signs in to vote
+	⦁	Votes are cryptohashed and stored in database
+	⦁	Votes are counted and compared
+	⦁	Results declared
+	⦁	Votes data deleted only count is retained
+	
+	 Candidate functions
+	⦁	Registers as candidate
+	⦁	Admin approves
+	⦁	Adds to candidate list
+	⦁	Visible in candidate list as option in polling 
+	
+	UI functions
+	⦁	Admin login
+	⦁	Voter sign up and login
+	⦁	In voter account also add function to register as candidate
+	⦁	Announcements page
+	⦁	Also add admin function to know the polling percentage
+}
+

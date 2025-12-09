@@ -1,0 +1,9 @@
+package com.example.service;
+
+public class ElectionService {
+
+	public ElectionService() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

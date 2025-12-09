@@ -1,0 +1,9 @@
+package com.example.entity;
+
+public class Election {
+
+	public Election() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

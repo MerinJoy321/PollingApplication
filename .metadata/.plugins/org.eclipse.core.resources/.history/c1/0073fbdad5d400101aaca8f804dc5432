@@ -1,0 +1,23 @@
+package com.example.service;
+
+import com.example.dto.request.CandidateRegisterRequest;
+import com.example.dto.request.CreateElectionRequest;
+import com.example.dto.request.LoginRequest;
+import com.example.dto.request.VoterRegisterRequest;
+import com.example.dto.response.MessageResponse;
+import com.example.dto.response.VoterResponse;
+
+public interface UserServiceImpl {
+
+    VoterResponse registerVoter(VoterRegisterRequest request);
+
+    MessageResponse login(LoginRequest request);
+
+    MessageResponse approveVoter(String voterId);
+
+    MessageResponse approveCandidate(Long candidateId);
+
+    MessageResponse registerCandidate(CandidateRegisterRequest request);
+
+    VoterResponse getVoterByVoterId(String voterId);
+}

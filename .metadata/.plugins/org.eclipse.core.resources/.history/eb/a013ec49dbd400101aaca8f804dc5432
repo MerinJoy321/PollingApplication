@@ -1,0 +1,56 @@
+package com.example.controller;
+
+import com.example.dto.request.CreateElectionRequest;
+import com.example.dto.request.UpdateElectionRequest;
+import com.example.dto.response.ElectionResultResponse;
+import com.example.service.ElectionService;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/election")
+public class ElectionController {
+
+    @Autowired
+    private ElectionService electionService;
+
+    @Operation(summary = "Create a new election")
+    @PostMapping
+    public ResponseEntity<Void> createElection(@RequestBody CreateElectionRequest request) {
+        electionService.createElection(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Get election details by ID")
+    @GetMapping("/{electionId}")
+    public ResponseEntity<ElectionResultResponse> getElectionDetails(@PathVariable Long electionId) {
+        ElectionResultResponse response = electionService.getElectionDetails(electionId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Get all elections")
+    @GetMapping
+    public ResponseEntity<List<ElectionResultResponse>> getAllElections() {
+        List<ElectionResultResponse> elections = electionService.getAllElections();
+        return ResponseEntity.ok(elections);
+    }
+
+    @Operation(summary = "Update an election")
+    @PutMapping("/{electionId}")
+    public ResponseEntity<Void> updateElection(@PathVariable Long electionId,
+                                               @RequestBody UpdateElectionRequest request) {
+        electionService.updateElection(electionId, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Delete an election")
+    @DeleteMapping("/{electionId}")
+    public ResponseEntity<Void> deleteElection(@PathVariable Long electionId) {
+        electionService.deleteElection(electionId);
+        return ResponseEntity.ok().build();
+    }
+}

@@ -1,0 +1,64 @@
+package com.example.service;
+
+import com.example.dto.request.VoteRequest;
+import com.example.dto.response.MessageResponse;
+import com.example.entity.Election;
+import com.example.entity.Voter;
+import com.example.entity.Vote;
+import com.example.repository.ElectionRepository;
+import com.example.repository.VoterRepository;
+import com.example.repository.VoteRepository;
+import com.example.exception.ResourceNotFoundException;
+import com.example.util.HashUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+
+@Service
+public class VoteService implements VoteServiceImpl {
+
+    @Autowired
+    private VoterRepository voterRepository;
+
+    @Autowired
+    private ElectionRepository electionRepository;
+
+    @Autowired
+    private VoteRepository voteRepository;
+
+    @Override
+    public MessageResponse castVote(VoteRequest request) {
+        Voter voter = voterRepository.findByVoterId(request.getVoterId())
+                .orElseThrow(() -> new ResourceNotFoundException("Voter not found"));
+
+        if (!voter.isApproved()) {
+            throw new IllegalArgumentException("Voter not approved");
+        }
+
+        if (voter.isHasVoted()) {
+            throw new IllegalArgumentException("Voter has already voted");
+        }
+
+        Election election = electionRepository.findById(request.getElectionId())
+                .orElseThrow(() -> new ResourceNotFoundException("Election not found"));
+
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(election.getStartTime()) || now.isAfter(election.getEndTime())) {
+            throw new IllegalArgumentException("Voting not active");
+        }
+
+        String hashedVote = HashUtil.hash(request.getCandidateId() + "|" + voter.getVoterId());
+
+        Vote vote = new Vote();
+        vote.setCandidateId(request.getCandidateId());
+        vote.setElectionId(election.getId());
+        vote.setHashedVote(hashedVote);
+        voteRepository.save(vote);
+
+        voter.setHasVoted(true);
+        voterRepository.save(voter);
+
+        return new MessageResponse("Vote cast successfully");
+    }
+}
